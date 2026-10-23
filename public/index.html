@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101311">
+    <meta name="description" content="Prywatny pokój głosowy dla znajomych z kanałami drużyn.">
+    <title>Nasza łączność — pokój głosowy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js?v=global-ptt-20261023a" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="join-screen" id="join-screen">
+        <div class="join-copy">
+          <div class="brand-mark" aria-hidden="true">N<span>+</span></div>
+          <p class="eyebrow">POKÓJ DLA TWOJEJ EKIPY</p>
+          <h1>Wasza łączność.<br><span>Wasze zasady.</span></h1>
+          <p class="intro">Wskakuj na kanał, słuchaj ekipy i rozmawiaj ze swoją drużyną.</p>
+          <div class="join-note"><span class="status-dot"></span> Jeden pokój · rozmowy na żywo</div>
+        </div>
+
+        <div class="join-card" id="start-actions">
+          <div class="card-kicker">ZACZYNAMY</div>
+          <h2>Wpisz swój nick</h2>
+          <p>Znajomi zobaczą tę nazwę na liście osób w pokoju.</p>
+          <label for="nickname">Twój nick</label>
+          <input id="nickname" name="nickname" maxlength="24" autocomplete="nickname" placeholder="np. Alex" required>
+          <p class="form-error" id="start-error" role="alert"></p>
+          <div class="card-kicker room-choice-kicker">WYBIERZ POKÓJ</div>
+          <button class="button button-primary join-button" id="create-room" type="button">
+            <span>Stwórz pokój</span><span aria-hidden="true">＋</span>
+          </button>
+          <button class="button button-secondary join-button" id="show-join-form" type="button">
+            <span>Dołącz do pokoju</span><span aria-hidden="true">↗</span>
+          </button>
+          <button class="button button-secondary join-button is-hidden" id="resume-room" type="button">
+            <span>Wróć do ostatniego pokoju</span><span aria-hidden="true">↗</span>
+          </button>
+          <div class="privacy-note"><span aria-hidden="true">⌁</span> Mikrofon włączasz przyciskiem po dołączeniu do pokoju.</div>
+        </div>
+
+        <form class="join-card is-hidden" id="access-form">
+          <div class="card-kicker">POKÓJ ZNAJOMEGO</div>
+          <h2>Wpisz kod pokoju</h2>
+          <p>Poproś osobę, która stworzyła pokój, o kod dostępu.</p>
+          <label for="room-code">Kod dostępu</label>
+          <input id="room-code" name="code" maxlength="10" minlength="10" autocomplete="off" autocapitalize="characters" placeholder="np. A7K4M9P2WX" required>
+          <button class="button button-primary join-button" type="submit">
+            <span>Znajdź pokój</span><span aria-hidden="true">↗</span>
+          </button>
+          <button class="back-button" id="back-to-start" type="button">← Wróć</button>
+          <p class="form-error" id="access-error" role="alert"></p>
+        </form>
+
+
+      </section>
+
+      <section class="room-screen is-hidden" id="room-screen">
+        <header class="topbar">
+          <a class="brand" href="/" aria-label="Nasza łączność — strona główna">
+            <span class="brand-mark small" aria-hidden="true">N<span>+</span></span>
+            <span>nasza<span class="brand-light">łączność</span></span>
+          </a>
+          <div class="room-label"><span class="live-indicator"></span><span id="room-label">POKÓJ</span></div>
+          <div class="topbar-actions">
+            <button class="user-chip" id="self-chip" type="button" title="Twoja nazwa">
+              <span class="avatar avatar-self" id="self-avatar">?</span>
+              <span id="self-name">Gość</span>
+              <span class="chip-chevron" aria-hidden="true">⌄</span>
+            </button>
+            <button class="logout-button is-hidden" id="logout-button" type="button">Wyloguj</button>
+          </div>
+        </header>
+
+        <div class="room-layout">
+          <section class="main-panel">
+            <div class="welcome-row">
+              <div>
+                <p class="eyebrow">ŁĄCZYMY SIĘ</p>
+                <h1>Pokój <span>główny</span></h1>
+              </div>
+              <div class="room-count"><span class="status-dot"></span><span id="participant-count">0 osób</span></div>
+            </div>
+
+            <div class="listen-banner" id="voice-status" role="status">
+              <span class="listen-icon" aria-hidden="true">◖</span>
+              <span><strong>Słuchasz wszystkich</strong><small>Wybierz drużynę i włącz mikrofon, aby mówić w swoim kanale.</small></span>
+              <span class="banner-state">NASŁUCH</span>
+            </div>
+
+            <div class="section-heading listener-heading">
+              <div><p class="eyebrow">TRYB NASŁUCHU</p><h2>Osobna rola</h2></div>
+              <span class="role-hint">Słyszysz wszystkie drużyny, ale nie nadajesz</span>
+            </div>
+            <div class="role-grid listener-grid">
+              <button class="role-card role-listener is-selected" data-role="listener" type="button" aria-pressed="true">
+                <span class="role-icon">◉</span><span class="role-text"><strong>Słuchacz</strong><small>Słyszysz wszystkich; nie możesz nadawać</small></span><span class="role-check">✓</span>
+              </button>
+            </div>
+
+            <div class="section-heading">
+              <div><p class="eyebrow">WYBIERZ SWOJĄ DRUŻYNĘ</p><h2>Do której drużyny należysz?</h2></div>
+              <span class="role-hint">Słyszysz tylko swoją drużynę i jej generała</span>
+            </div>
+
+            <div class="role-grid team-grid">
+              <button class="role-card role-supple" data-role="supple" type="button" aria-pressed="false">
+                <span class="role-icon">01</span><span class="role-text"><strong>Supple</strong><small>Tylko drużyna Supple i jej generał</small></span><span class="role-check">✓</span>
+              </button>
+              <button class="role-card role-support" data-role="support" type="button" aria-pressed="false">
+                <span class="role-icon">02</span><span class="role-text"><strong>Support</strong><small>Tylko drużyna Support i jej generał</small></span><span class="role-check">✓</span>
+              </button>
+              <button class="role-card role-szturm" data-role="szturm" type="button" aria-pressed="false">
+                <span class="role-icon">03</span><span class="role-text"><strong>Szturm</strong><small>Tylko drużyna Szturm i jej generał</small></span><span class="role-check">✓</span>
+              </button>
+            </div>
+
+            <div class="section-heading general-heading">
+              <div><p class="eyebrow">DOWODZENIE</p><h2>Wybierz kanał generała</h2></div>
+              <span class="role-hint">Słyszysz swoją drużynę i wszystkich generałów</span>
+            </div>
+            <div class="role-grid general-grid">
+              <button class="role-card role-general-supple" data-role="general-supple" type="button" aria-pressed="false">
+                <span class="role-icon">✳</span><span class="role-text"><strong>Generał Supple</strong><small>Swoja drużyna i wszyscy generałowie</small></span><span class="role-check">✓</span>
+              </button>
+              <button class="role-card role-general-support" data-role="general-support" type="button" aria-pressed="false">
+                <span class="role-icon">✳</span><span class="role-text"><strong>Generał Support</strong><small>Swoja drużyna i wszyscy generałowie</small></span><span class="role-check">✓</span>
+              </button>
+              <button class="role-card role-general-szturm" data-role="general-szturm" type="button" aria-pressed="false">
+                <span class="role-icon">✳</span><span class="role-text"><strong>Generał Szturm</strong><small>Swoja drużyna i wszyscy generałowie</small></span><span class="role-check">✓</span>
+              </button>
+            </div>
+
+            <div class="mic-bar">
+              <div class="mic-copy"><span class="mic-symbol" aria-hidden="true">♩</span><span><strong id="mic-label">Mikrofon wyłączony</strong><small id="mic-hint">Włącz mikrofon, aby zacząć mówić</small></span></div>
+              <div class="mic-actions">
+                <button class="button button-mic" id="mic-toggle" type="button" disabled><span class="mic-button-icon">●</span><span>Włącz mikrofon</span></button>
+                <button class="button button-mute-all" id="mute-all-toggle" type="button" aria-pressed="false" title="Wycisz jednocześnie mikrofon i dźwięk od innych osób"><span aria-hidden="true">◖</span><span>Wycisz wszystko</span></button>
+                <button class="button button-volume" id="volume-toggle" type="button" aria-expanded="false" aria-controls="volume-control"><span aria-hidden="true">◖</span><span>Głośność</span></button>
+                <button class="button button-test" id="mic-test-toggle" type="button" disabled><span aria-hidden="true">⌁</span><span>Sprawdź mikrofon</span></button>
+                <button class="button button-ptt" id="push-to-talk" type="button" disabled><span aria-hidden="true">●</span><span>Przytrzymaj, aby mówić</span></button>
+                <button class="button button-keybind" id="push-to-talk-key" type="button">Ustaw klawisz</button>
+              </div>
+              <div class="volume-control is-hidden" id="volume-control">
+                <label for="remote-volume">
+                  <span>Głośność innych osób <strong id="remote-volume-value">100%</strong></span>
+                  <input id="remote-volume" type="range" min="0" max="100" step="1" value="100">
+                </label>
+              </div>
+            </div>
+            <p class="network-warning is-hidden" id="network-warning" role="status">
+              Na serwerze nie ma TURN — tylko STUN. Gdy uczestnicy są w różnych sieciach, połączenie audio może nie działać. Skonfiguruj TURN_URLS, TURN_USERNAME i TURN_CREDENTIAL na serwerze, a następnie uruchom go ponownie.
+            </p>
+          </section>
+
+          <aside class="people-panel">
+            <div class="people-heading"><div><p class="eyebrow">NA KANALE</p><h2>Ekipa</h2></div><span class="people-total" id="people-total">0</span></div>
+            <div class="invite-card is-hidden" id="invite-card">
+              <p class="eyebrow">KOD TWOJEGO POKOJU</p>
+              <div class="invite-code-row"><strong id="invite-code"></strong><button id="copy-invite-code" type="button" aria-label="Kopiuj kod pokoju">Kopiuj</button></div>
+              <small>Podaj ten kod znajomym, żeby mogli dołączyć.</small>
+              <p class="copy-status" id="copy-status" role="status"></p>
+            </div>
+            <div class="connection-pill" id="connection-pill"><span class="status-dot"></span><span>Łączenie...</span></div>
+            <div class="people-list" id="people-list" aria-live="polite"></div>
+            <section class="ptt-speakers" aria-labelledby="ptt-speakers-title">
+              <div class="chat-heading">
+                <div><p class="eyebrow">KANAŁ GLOBALNY</p><h2 id="ptt-speakers-title">Mówią teraz</h2></div>
+              </div>
+              <table class="ptt-table">
+                <thead><tr><th>Uczestnik</th><th>Status</th></tr></thead>
+                <tbody id="ptt-speakers">
+                  <tr class="ptt-empty"><td colspan="2">Nikt teraz nie mówi.</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section class="chat-panel" aria-labelledby="chat-title">
+              <div class="chat-heading">
+                <div><p class="eyebrow">ROZMOWY NA ŻYWO</p><h2 id="chat-title">Czat</h2></div>
+              </div>
+              <div class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-relevant="additions">
+                <p class="chat-empty">Wiadomości z pokoju pojawią się tutaj.</p>
+              </div>
+              <form class="chat-form" id="chat-form">
+                <label class="visually-hidden" for="chat-input">Wiadomość na czacie</label>
+                <input id="chat-input" name="message" maxlength="500" autocomplete="off" placeholder="Napisz wiadomość..." disabled required>
+                <button type="submit" id="chat-send" disabled>Wyślij</button>
+              </form>
+            </section>
+            <div class="legend">
+              <p class="eyebrow">JAK DZIAŁAJĄ KANAŁY</p>
+              <div><span class="legend-dot team-dot"></span><span>Drużyny mają osobne kanały z własnym generałem</span></div>
+              <div><span class="legend-dot general-dot"></span><span>Generałowie rozmawiają ze sobą na wspólnym kanale</span></div>
+            </div>
+            <button class="leave-button" id="leave-room" type="button"><span aria-hidden="true">↩</span> Opuść pokój</button>
+          </aside>
+        </div>
+        <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+      </section>
+    </main>
+    <audio id="mic-monitor" autoplay></audio>
+  </body>
+</html>
